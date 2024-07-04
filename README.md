@@ -48,3 +48,7 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+## About Project
+
+Kaelance is an innovative social finance platform designed to help users achieve their financial goals through collective effort and group savings. The platform allows individuals to create or join finance circles, where members can commit money towards shared financial purchases or savings objectives.
