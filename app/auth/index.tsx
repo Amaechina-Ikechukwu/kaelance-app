@@ -11,6 +11,7 @@ import kaeStore from "@/hooks/kaestore";
 import { useShallow } from "zustand/react/shallow";
 import { useNotification } from "@/hooks/InAppNotificationProvider";
 import { AuthPost } from "@/apis/Authentication/AuthPost";
+import { useAuth } from "@/hooks/AuthContextProvider";
 
 export default function LoginScreen() {
   const [inputValues, setInputValue] = useState({
@@ -24,7 +25,7 @@ export default function LoginScreen() {
   );
 
   const { showNotification } = useNotification();
-
+  const { signIn } = useAuth();
   const handleChange = (name: string, value: any) => {
     setInputValue((prevValues: any) => ({
       ...prevValues,
@@ -45,9 +46,9 @@ export default function LoginScreen() {
     try {
       if (validateInputs()) {
         // Proceed with signup logic
-        showNotification("Siging in", "loading");
+        showNotification("Siging in... please wait", "loading");
         const result = await AuthPost("login", body);
-
+        signIn(result?.token);
         showNotification("Congratulations, Kallum is here to serve", "success");
 
         router.push("/(tabs)");
@@ -65,11 +66,20 @@ export default function LoginScreen() {
     <ThemedView style={styles.container}>
       <CallingCard text="Login" position={0.5} />
       <ThemedView style={styles.inputContainer}>
-        <KaeInput label="Enter username or email" />
-        <KaeInput label="Enter password" />
+        <KaeInput
+          value={inputValues.userName}
+          setValue={(text) => handleChange("userName", text)}
+          label="Enter username or email"
+        />
+        <KaeInput
+          value={inputValues.passWord}
+          setValue={(text) => handleChange("passWord", text)}
+          label="Enter password"
+          secureTextEntry
+        />
       </ThemedView>
       <ThemedView>
-        <KaeButton text="Log in to Kaelance" />
+        <KaeButton onPress={setUpAccount} text="Log in to Kaelance" />
       </ThemedView>
       <ThemedView style={styles.bottom}>
         <ThemedText>Yet to have an account on Kaelance?</ThemedText>

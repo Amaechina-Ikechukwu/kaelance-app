@@ -47,4 +47,5 @@ export interface BalanceDetails {
   currency: string;
   currencySymbol: string;
   lastUpdated: string; // ISO date string
+  totalCommittment: number;
 }

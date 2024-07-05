@@ -14,8 +14,6 @@ export default function TabLayout() {
     setIsLoading(true);
     if (token == null) {
       router.push("/auth/onboarding");
-    } else {
-      router.push("/auth");
     }
   };
   const colorScheme = useColorScheme();

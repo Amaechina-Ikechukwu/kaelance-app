@@ -13,7 +13,7 @@ import { Colors, blue } from "./Colors";
 const { width } = Dimensions.get("window");
 interface KallumInputProps extends TextInputProps {
   label: string;
-  value?: string;
+  value?: string | any;
   setValue?: React.Dispatch<React.SetStateAction<string>>;
   styles?: {};
 }

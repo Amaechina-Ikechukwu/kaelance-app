@@ -11,25 +11,49 @@ import { useNotification } from "@/hooks/InAppNotificationProvider";
 import Step1 from "@/components/Onboarding/Step1";
 import Step2 from "@/components/Onboarding/Step2";
 import Step3 from "@/components/Onboarding/Step3";
+import { useEffect, useState } from "react";
+import kaeStore from "@/hooks/kaestore";
+import { useShallow } from "zustand/react/shallow";
+import { BankGet } from "@/apis/Bank/BankGet";
+import { useAuth } from "@/hooks/AuthContextProvider";
+import BankDetails from "@/components/HomeInterfaces/BankDetailsInfo";
+import { statusBarHeight } from "@/constants/StatusBarHeight";
+import FinanceCircle from "@/components/HomeInterfaces/FinanceCircle";
 
 export default function HomeScreen() {
-  const { showNotification } = useNotification();
-  const handleSignIn = async () => {
-    showNotification("Loading...", "loading");
-    try {
-      setTimeout(() => {
-        showNotification("Sign in successful!", "success");
-      }, 5000);
-      setTimeout(() => {
-        showNotification("Sign in failed!", "error");
-      }, 10000);
-    } catch (error) {
-      showNotification("Sign in failed!", "error");
-    }
+  const [isLoading, setIsLoading] = useState(false);
+  const { userToken } = useAuth();
+  const [setAccountDetails, setBalanceDetails] = kaeStore(
+    useShallow((state) => [state.setAccountDetails, state.setBalanceDetails])
+  );
+  const getBankDetails = async () => {
+    const result = await BankGet("accountdetails", userToken);
+    const balance = await BankGet("balance", userToken);
+
+    setAccountDetails(result);
+    setBalanceDetails(balance);
+    setIsLoading(true);
   };
+  useEffect(() => {
+    if (userToken) {
+      getBankDetails();
+    }
+  }, [userToken]);
+  if (isLoading == false) {
+    return <Loading />;
+  }
   return (
-    <ThemedView style={{ flex: 1 }}>
-      <Step3 />
+    <ThemedView
+      style={{
+        flex: 1,
+        justifyContent: "flex-start",
+        marginTop: statusBarHeight,
+        paddingTop: 20,
+        gap: 36,
+      }}
+    >
+      <BankDetails />
+      <FinanceCircle />
     </ThemedView>
   );
 }

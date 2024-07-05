@@ -1,11 +1,27 @@
-// AuthContext.js
-import React, { createContext, useState, useEffect, useContext } from "react";
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  ReactNode,
+} from "react";
 import * as SecureStore from "expo-secure-store";
 
-const AuthContext = createContext();
+interface AuthContextProps {
+  userToken: string | null;
+  isLoading: boolean;
+  signIn: (token: string) => Promise<void>;
+  signOut: () => Promise<void>;
+}
 
-export const AuthProvider = ({ children }) => {
-  const [userToken, setUserToken] = useState(null);
+const AuthContext = createContext<AuthContextProps | undefined>(undefined);
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [userToken, setUserToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -25,7 +41,7 @@ export const AuthProvider = ({ children }) => {
     checkUserToken();
   }, []);
 
-  const signIn = async (token) => {
+  const signIn = async (token: string) => {
     try {
       await SecureStore.setItemAsync("userToken", token);
       setUserToken(token);
@@ -50,4 +66,10 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = (): AuthContextProps => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};

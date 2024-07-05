@@ -19,6 +19,7 @@ import { useShallow } from "zustand/react/shallow";
 import kaeStore from "@/hooks/kaestore";
 import { useNotification } from "@/hooks/InAppNotificationProvider";
 import CallingCard from "@/constants/CallingCard";
+import { useAuth } from "@/hooks/AuthContextProvider";
 
 export default function Signup() {
   const [inputValues, setInputValue] = useState({
@@ -35,7 +36,7 @@ export default function Signup() {
   );
 
   const { showNotification } = useNotification();
-
+  const { signIn } = useAuth();
   const handleChange = (name: string, value: any) => {
     setInputValue((prevValues) => ({
       ...prevValues,
@@ -44,7 +45,7 @@ export default function Signup() {
   };
   const body = { fullName: fullName.trim(), email, phoneNumber, passWord };
   const validateInputs = () => {
-    showNotification("Siging up", "loading");
+    showNotification("Siging up...please wait", "loading");
     if (!fullName || !email || !phoneNumber || !passWord || !confirmPassword) {
       showNotification("All fields are required.", "error");
       return false;
@@ -67,6 +68,7 @@ export default function Signup() {
         const result = await AuthPost("register", body);
 
         showNotification("Congratulations, Kallum is here to serve", "success");
+        signIn(result.token);
         router.push("/(tabs)");
       }
     } catch (error) {

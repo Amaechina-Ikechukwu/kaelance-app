@@ -12,6 +12,7 @@ type State = {
   accountDetails: AccountDetails | null;
   transactions: Transactions | null;
   balanceDetails: BalanceDetails | null;
+  financeCircle: any | null;
   setKaeLockStatus: (
     value: { securePin: string; transactionPin: string } | null
   ) => void;
@@ -22,6 +23,7 @@ type State = {
   setAccountDetails: (value: AccountDetails | null) => void;
   setTransactions: (value: Transactions | null) => void;
   setBalanceDetails: (value: BalanceDetails | null) => void;
+  setFinanceCircle: (value: any) => void;
 };
 
 const kaeStore = create<State>((set) => ({
@@ -32,6 +34,7 @@ const kaeStore = create<State>((set) => ({
   transactions: null,
   balanceDetails: null,
   retryFunction: null,
+  financeCircle: [],
   setActionStatus: (status) => set({ actionStatus: status }),
   setIsSecured: (value) => set({ isSecured: value }),
   setKaeLockStatus: (value) => set({ kaeLockStatus: value }),
@@ -39,6 +42,7 @@ const kaeStore = create<State>((set) => ({
   setAccountDetails: (value) => set({ accountDetails: value }),
   setTransactions: (value) => set({ transactions: value }),
   setBalanceDetails: (value) => set({ balanceDetails: value }),
+  setFinanceCircle: (value) => set({ financeCircle: value }),
 }));
 
 export default kaeStore;
