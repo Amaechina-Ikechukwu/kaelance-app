@@ -100,10 +100,7 @@ const KaeInput: React.FC<KallumInputProps> = ({
       inputRange: [0, 1],
       outputRange: [Colors[theme].text, Colors[theme].text],
     }),
-    width: animatedIsFocused.interpolate({
-      inputRange: [0, 1],
-      outputRange: [width * 0.9, width * 0.9],
-    }),
+
     padding: animatedIsFocused.interpolate({
       inputRange: [0, 1],
       outputRange: [0, 0],
@@ -122,8 +119,14 @@ const KaeInput: React.FC<KallumInputProps> = ({
           {...props}
           style={[
             defaultStyles.input,
+
+            {
+              color: Colors[theme].text,
+              padding: 20,
+              letterSpacing: 3,
+              width: width * 0.9,
+            },
             props.style,
-            { color: Colors[theme].text, padding: 20, letterSpacing: 3 },
           ]}
           onFocus={handleFocus}
           onBlur={handleBlur}

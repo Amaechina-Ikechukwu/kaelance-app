@@ -15,7 +15,6 @@ export default function TransactionIndex() {
   const amount = 0; // Example amount in NGN
 
   const handlePaymentRedirect = (data: RedirectParams) => {
-    console.log("Redirect data:", data);
     // Handle redirection logic here
   };
 
