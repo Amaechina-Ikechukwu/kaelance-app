@@ -29,8 +29,12 @@ const EmptyList = () => {
 export default function FriendToAdd() {
   const { userToken } = useAuth();
   const theme = useColorScheme() ?? "light";
-  const [friendsToAdd, setFriendsToAdd] = kaeStore(
-    useShallow((state) => [state.friendsToAdd, state.setFriendsToAdd])
+  const [friendsToAdd, setFriendsToAdd, accountDetails] = kaeStore(
+    useShallow((state) => [
+      state.friendsToAdd,
+      state.setFriendsToAdd,
+      state.accountDetails,
+    ])
   );
   const { showNotification } = useNotification();
   const [searchResult, setSearchResult] = useState([]);
@@ -52,6 +56,17 @@ export default function FriendToAdd() {
     showNotification(`Found ${friendName}`, "success");
     Keyboard.dismiss();
   };
+  const selectItem = (item: AccountDetails) => {
+    if (item.bankAccountId === accountDetails?.bankAccountId) {
+      showNotification(
+        "You can not add your to this list. \n It will be done for you",
+        "error"
+      );
+      return;
+    }
+    setFriendsToAdd(item);
+    setSearchResult([]);
+  };
 
   useEffect(() => {}, [FriendToAdd]);
   const renderItem = ({ item }: { item: AccountDetails }) => {
@@ -69,7 +84,7 @@ export default function FriendToAdd() {
           (f: AccountDetails) =>
             f.kallumUser.userName === item.kallumUser.userName
         )}
-        onPress={() => setFriendsToAdd(item)}
+        onPress={() => selectItem(item)}
       >
         <View
           style={[
@@ -78,32 +93,45 @@ export default function FriendToAdd() {
           ]}
         >
           <Avatar name={item.kallumUser.userName} />
-          <ThemedText type="subtitle">{item.kallumUser.userName}</ThemedText>
+          <View>
+            <ThemedText type="subtitle">{item.kallumUser.userName}</ThemedText>
+            <ThemedText type="link">Tap to select</ThemedText>
+          </View>
         </View>
       </TouchableOpacity>
     );
   };
   return (
     <ThemedView style={[styles.container]}>
-      <View style={{ height: height * 0.08, width: "100%" }}>
-        <FlatList
-          horizontal={true}
-          data={friendsToAdd}
-          renderItem={renderItem}
-          contentContainerStyle={{ gap: 20 }}
-          style={{
-            flexDirection: "row",
-            gap: 16,
-            width: width * 0.9,
-            padding: 10,
-            borderRadius: 10,
-            height: 10,
-          }}
-        />
-      </View>
+      {friendsToAdd.length > 0 && (
+        <View style={{ height: height * 0.08, width: "100%" }}>
+          <FlatList
+            horizontal={true}
+            data={friendsToAdd}
+            renderItem={renderItem}
+            contentContainerStyle={{ gap: 20 }}
+            ListHeaderComponentStyle={{
+              width: "auto",
+              alignItems: "flex-start",
+            }}
+            ListHeaderComponent={
+              <ThemedText type="defaultSemiBold">
+                Friends added {friendsToAdd.length}:
+              </ThemedText>
+            }
+            style={{
+              gap: 16,
+              width: width * 0.9,
+              padding: 10,
+              borderRadius: 10,
+              height: 10,
+            }}
+          />
+        </View>
+      )}
 
       <KaeInput
-        label="Enter name of friend"
+        label="Enter name of friend to search"
         value={friendName}
         style={{}}
         setValue={(text) => setFriendName(text)}
@@ -118,9 +146,14 @@ export default function FriendToAdd() {
           zIndex: 999,
         }}
       >
-        {showList ? (
+        {searchResult.length > 0 ? (
           <ThemedView
-            style={{ width: width * 9, padding: 20, height: height * 0.5 }}
+            style={{
+              width: width * 9,
+              padding: 20,
+              height: height * 0.5,
+              backgroundColor: pink,
+            }}
           >
             <FlatList
               style={{ width: width * 0.9, borderRadius: 10 }}
@@ -135,9 +168,9 @@ export default function FriendToAdd() {
               }}
               ListHeaderComponent={
                 <TouchableOpacity
-                  onPress={() => setShowList(false)}
+                  onPress={() => setSearchResult([])}
                   style={{
-                    backgroundColor: pink,
+                    backgroundColor: Colors[theme].background,
                     padding: 10,
                     borderRadius: 5,
                   }}

@@ -14,6 +14,8 @@ import BottomSheet, {
 
 interface BottomSheetContextProps {
   openBottomSheet: (component: ReactNode) => void;
+  closeBottomSheet: () => void;
+  executeFunction: (fn: () => void) => void;
 }
 
 const BottomSheetContext = createContext<BottomSheetContextProps | undefined>(
@@ -36,8 +38,18 @@ export const BottomSheetProvider: React.FC<BottomSheetProviderProps> = ({
     bottomSheetModalRef.current?.present();
   };
 
+  const closeBottomSheet = () => {
+    bottomSheetModalRef.current?.dismiss();
+  };
+
+  const executeFunction = (fn: () => void) => {
+    fn();
+  };
+
   return (
-    <BottomSheetContext.Provider value={{ openBottomSheet }}>
+    <BottomSheetContext.Provider
+      value={{ openBottomSheet, closeBottomSheet, executeFunction }}
+    >
       <BottomSheetModalProvider>
         {children}
         <BottomSheetModal

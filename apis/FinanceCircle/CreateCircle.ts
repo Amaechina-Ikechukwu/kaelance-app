@@ -2,18 +2,21 @@
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL; // Replace with your API URL
 
 // Define the function to send a POST request with a bearer token using fetch
-export const GetFinanceCircle = async (
+export const CreateCircle = async (
   endpoint: string,
-  token: string | null | undefined
+
+  requestBody: any, // Adjust the type of requestBody according to your payload structure
+  token?: string | undefined | null
 ) => {
   try {
     const response = await fetch(`${BASE_URL}/api/financecircle/${endpoint}`, {
-      method: "GET",
+      method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json-patch+json",
         // Add any other headers if needed
         Authorization: `Bearer ${token}`,
       },
+      body: JSON.stringify(requestBody),
     });
 
     if (!response.ok) {

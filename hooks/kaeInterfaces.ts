@@ -1,4 +1,4 @@
-interface KallumUser {
+export interface KallumUser {
   userName: string;
   email: string;
 }
@@ -49,3 +49,26 @@ export interface BalanceDetails {
   lastUpdated: string; // ISO date string
   totalCommittment: number;
 }
+
+enum CircleType {}
+// Add appropriate enum values
+
+enum Status {}
+// Add appropriate enum values
+
+export interface Circle {
+  circleId: string;
+  name: string;
+  totalAmountCommitted: number;
+  friends: KallumUser[];
+  fundWithdrawalApprovalCount: number;
+  personalCommittmentPercentage: number;
+  withdrawalChargePercentage: number;
+  withdrawalLimitPercentage: number;
+  creatorId: string;
+  transactionHistory: Transactions[];
+  circleType: CircleType;
+  status: Status;
+}
+
+type CircleArray = Circle[];

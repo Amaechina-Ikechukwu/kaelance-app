@@ -19,19 +19,25 @@ import { useAuth } from "@/hooks/AuthContextProvider";
 import BankDetails from "@/components/HomeInterfaces/BankDetailsInfo";
 import { statusBarHeight } from "@/constants/StatusBarHeight";
 import FinanceCircle from "@/components/HomeInterfaces/FinanceCircle";
+import { GetFinanceCircle } from "@/apis/FinanceCircle/GetFinacleCircle";
 
 export default function HomeScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const { userToken } = useAuth();
-  const [setAccountDetails, setBalanceDetails] = kaeStore(
-    useShallow((state) => [state.setAccountDetails, state.setBalanceDetails])
+  const [setAccountDetails, setBalanceDetails, setFinanceCircle] = kaeStore(
+    useShallow((state) => [
+      state.setAccountDetails,
+      state.setBalanceDetails,
+      state.setFinanceCircle,
+    ])
   );
   const getBankDetails = async () => {
     const result = await BankGet("accountdetails", userToken);
     const balance = await BankGet("balance", userToken);
-
+    const financeCircle = await GetFinanceCircle("", userToken);
     setAccountDetails(result);
     setBalanceDetails(balance);
+    setFinanceCircle(financeCircle);
     setIsLoading(true);
   };
   useEffect(() => {

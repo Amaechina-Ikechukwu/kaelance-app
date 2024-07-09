@@ -15,13 +15,15 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Colors, pink } from "@/constants/Colors";
 import Avatar from "@/constants/Avatar";
-import { height, width } from "@/constants/StatusBarHeight";
+import { height, statusBarHeight, width } from "@/constants/StatusBarHeight";
 import FinanceCircle from "@/components/HomeInterfaces/FinanceCircle";
 import { FlatList } from "react-native-gesture-handler";
 import kaeStore from "@/hooks/kaestore";
 import { useShallow } from "zustand/react/shallow";
 import CircleCreation from "@/components/FinanceCircle/CircleCreation";
 import { useBottomSheet } from "@/hooks/BottomSheetProvider";
+import CircleCard from "@/components/FinanceCircle/CircleCard";
+import { Circle } from "@/hooks/kaeInterfaces";
 const EmptyCircle = () => {
   const theme = useColorScheme() ?? "light";
   const { openBottomSheet } = useBottomSheet();
@@ -65,20 +67,10 @@ export default function TabTwoScreen() {
   const [financeCircle] = kaeStore(
     useShallow((state) => [state.financeCircle])
   );
-  const renderItem = ({ item }: { item: any }) => {
+  const renderItem = ({ item }: { item: Circle }) => {
     return (
       <View style={[styles.circleContainer]}>
-        <Avatar name="Kaelance" />
-        <ThemedText
-          type="default"
-          style={{
-            maxWidth: "30%",
-            textAlign: "center",
-            color: Colors.light.background,
-          }}
-        >
-          Welcome to kaelance vyuihoh uihojho ihohihi
-        </ThemedText>
+        <CircleCard item={item} />
       </View>
     );
   };
@@ -89,7 +81,6 @@ export default function TabTwoScreen() {
         // contentContainerStyle={{ width: "100%" }}
         data={financeCircle}
         renderItem={renderItem}
-        horizontal
         ListEmptyComponent={<EmptyCircle />}
       />
     </ThemedView>
@@ -99,6 +90,7 @@ export default function TabTwoScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: statusBarHeight + 10,
   },
   pinkContainer: {
     borderRadius: 10,

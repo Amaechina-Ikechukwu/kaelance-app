@@ -1,4 +1,3 @@
-// NotificationContext.tsx
 import React, {
   createContext,
   useState,
@@ -11,7 +10,9 @@ import React, {
 import { View, Text, StyleSheet, Animated, SafeAreaView } from "react-native";
 import Constants from "expo-constants";
 import { blue, error, pink } from "@/constants/Colors";
+
 const statusBarHeight = Constants.statusBarHeight;
+
 interface Notification {
   visible: boolean;
   message: string;
@@ -38,24 +39,32 @@ export const InAppNotificationProvider: FC<{ children: ReactNode }> = ({
     type: "",
   });
   const translateY = useRef(new Animated.Value(-100)).current;
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (notification.visible) {
+      // Start the slide-in animation
       Animated.timing(translateY, {
         toValue: 0,
         duration: 300,
         useNativeDriver: true,
-      }).start(() => {
-        setTimeout(() => {
-          Animated.timing(translateY, {
-            toValue: -100,
-            duration: 300,
-            useNativeDriver: true,
-          }).start(() =>
-            setNotification({ visible: false, message: "", type: "" })
-          );
-        }, 2000);
-      });
+      }).start();
+
+      // Clear the previous timeout if it exists
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+
+      // Start a new timeout to slide-out the notification
+      timeoutRef.current = setTimeout(() => {
+        Animated.timing(translateY, {
+          toValue: -100,
+          duration: 300,
+          useNativeDriver: true,
+        }).start(() =>
+          setNotification({ visible: false, message: "", type: "" })
+        );
+      }, 2000);
     }
   }, [notification, translateY]);
 

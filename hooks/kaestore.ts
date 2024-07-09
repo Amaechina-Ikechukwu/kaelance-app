@@ -26,6 +26,7 @@ type State = {
   setBalanceDetails: (value: BalanceDetails | null) => void;
   setFinanceCircle: (value: any) => void;
   setFriendsToAdd: (value: any) => void;
+  setClearAllFriendsToAdd: () => void;
 };
 
 const kaeStore = create<State>((set) => ({
@@ -46,6 +47,7 @@ const kaeStore = create<State>((set) => ({
   setTransactions: (value) => set({ transactions: value }),
   setBalanceDetails: (value) => set({ balanceDetails: value }),
   setFinanceCircle: (value) => set({ financeCircle: value }),
+  setClearAllFriendsToAdd: () => set({ financeCircle: [] }),
   setFriendsToAdd: (friend) =>
     set((state) => {
       const friendExists = state.friendsToAdd.some(
