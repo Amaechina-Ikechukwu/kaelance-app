@@ -25,6 +25,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "@/hooks/AuthContextProvider";
 import { BankGet } from "@/apis/Bank/BankGet";
 import { useNotification } from "@/hooks/InAppNotificationProvider";
+import { formatMoney } from "@/hooks/FormatMoney";
 export default function BankDetails() {
   const [accountDetails, balanceDetails] = kaeStore(
     useShallow((state) => [state.accountDetails, state.balanceDetails])
@@ -91,8 +92,11 @@ export default function BankDetails() {
           >
             <View style={styles.accountContainer}>
               <ThemedText type="subtitle" style={{ fontSize: 30 }}>
-                {balanceDetails?.currencySymbol}
-                {balanceDetails?.currentBalance}
+                {formatMoney(
+                  balanceDetails?.currentBalance -
+                    (balanceDetails.totalCommittment / 100) *
+                      balanceDetails?.currentBalance
+                )}
               </ThemedText>
               <ThemedText type="default">committed to Kaelance</ThemedText>
             </View>
@@ -102,7 +106,7 @@ export default function BankDetails() {
           </View>
 
           <PillContainer
-            text={`${balanceDetails?.totalCommittment} committemnt to a finance circle`}
+            text={`${balanceDetails?.totalCommittment} committemnt to your circles in total`}
           />
           <TouchableOpacity
             style={{

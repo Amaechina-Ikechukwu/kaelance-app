@@ -22,6 +22,7 @@ import { useAuth } from "@/hooks/AuthContextProvider";
 import { blue, Colors, pink } from "@/constants/Colors";
 import { height, width } from "@/constants/StatusBarHeight";
 import { useNotification } from "@/hooks/InAppNotificationProvider";
+import { BankGet } from "@/apis/Bank/BankGet";
 
 const EmptyList = () => {
   return <ThemedView>Search friend to add</ThemedView>;
@@ -48,7 +49,7 @@ export default function FriendToAdd() {
     }
     setShowList(true);
     showNotification(`Finding ${friendName}`, "loading");
-    const result = await GetFinanceCircle(
+    const result = await BankGet(
       `findkallumuser?UserName=${friendName}`,
       userToken
     );

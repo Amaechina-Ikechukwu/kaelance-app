@@ -1,5 +1,11 @@
 import { create } from "zustand";
-import { AccountDetails, BalanceDetails, Transactions } from "./kaeInterfaces";
+import {
+  AccountDetails,
+  BalanceDetails,
+  Circle,
+  CircleActivity,
+  Transactions,
+} from "./kaeInterfaces";
 
 // Define the types for your state
 type State = {
@@ -12,8 +18,10 @@ type State = {
   accountDetails: AccountDetails | null;
   transactions: Transactions | null;
   balanceDetails: BalanceDetails | null;
-  financeCircle: any | null;
+  financeCircle: Circle[] | null;
   friendsToAdd: any | null;
+  circle: Circle | null;
+  circleActivity: CircleActivity[] | null;
   setKaeLockStatus: (
     value: { securePin: string; transactionPin: string } | null
   ) => void;
@@ -27,6 +35,8 @@ type State = {
   setFinanceCircle: (value: any) => void;
   setFriendsToAdd: (value: any) => void;
   setClearAllFriendsToAdd: () => void;
+  setCircle: (value: any) => void;
+  setCircleActivity: (value: any) => void;
 };
 
 const kaeStore = create<State>((set) => ({
@@ -39,6 +49,8 @@ const kaeStore = create<State>((set) => ({
   retryFunction: null,
   financeCircle: [],
   friendsToAdd: [],
+  circle: null,
+  circleActivity: [],
   setActionStatus: (status) => set({ actionStatus: status }),
   setIsSecured: (value) => set({ isSecured: value }),
   setKaeLockStatus: (value) => set({ kaeLockStatus: value }),
@@ -48,6 +60,8 @@ const kaeStore = create<State>((set) => ({
   setBalanceDetails: (value) => set({ balanceDetails: value }),
   setFinanceCircle: (value) => set({ financeCircle: value }),
   setClearAllFriendsToAdd: () => set({ financeCircle: [] }),
+  setCircle: (value) => set({ circle: value }),
+  setCircleActivity: (value) => set({ circleActivity: value }),
   setFriendsToAdd: (friend) =>
     set((state) => {
       const friendExists = state.friendsToAdd.some(

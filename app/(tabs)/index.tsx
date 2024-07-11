@@ -46,7 +46,7 @@ export default function HomeScreen() {
     }
   }, [userToken]);
   if (isLoading == false) {
-    return <Loading />;
+    return <Loading componentName="Home" refresh={getBankDetails} />;
   }
   return (
     <ThemedView

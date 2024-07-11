@@ -69,7 +69,12 @@ export default function TabTwoScreen() {
   );
   const renderItem = ({ item }: { item: Circle }) => {
     return (
-      <View style={[styles.circleContainer]}>
+      <View
+        style={[
+          styles.circleContainer,
+          { backgroundColor: Colors[theme].background },
+        ]}
+      >
         <CircleCard item={item} />
       </View>
     );
@@ -90,7 +95,7 @@ export default function TabTwoScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: statusBarHeight + 10,
+    paddingTop: statusBarHeight,
   },
   pinkContainer: {
     borderRadius: 10,

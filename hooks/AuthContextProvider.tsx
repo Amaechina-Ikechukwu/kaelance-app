@@ -6,6 +6,7 @@ import React, {
   ReactNode,
 } from "react";
 import * as SecureStore from "expo-secure-store";
+import { router } from "expo-router";
 
 interface AuthContextProps {
   userToken: string | null;
@@ -54,6 +55,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       await SecureStore.deleteItemAsync("userToken");
       setUserToken(null);
+      router.push("auth/");
     } catch (error) {
       console.error("Failed to delete user token", error);
     }

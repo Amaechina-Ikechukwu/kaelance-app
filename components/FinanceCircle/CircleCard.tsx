@@ -11,6 +11,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
+import { ThemedText } from "../ThemedText";
 
 interface CircleCardProps {
   item: Circle;
@@ -18,7 +19,7 @@ interface CircleCardProps {
 
 const CircleCard: React.FC<CircleCardProps> = ({ item }) => {
   return (
-    <TouchableOpacity onPress={() => router.push(`circle/${item.circleId}`)}>
+    <TouchableOpacity onPress={() => router.push(`circle/${item.circleId}/`)}>
       <LinearGradientBox style={styles.card}>
         <View style={styles.circlesContainer}>
           <LinearAvatar name={item.name} size={80} />
@@ -28,8 +29,10 @@ const CircleCard: React.FC<CircleCardProps> = ({ item }) => {
             </View>
           ))}
         </View>
-        <Text style={styles.title}>{item.name}</Text>
-        <Text style={styles.friendsCount}>{item.friends.length} friends</Text>
+        <ThemedText style={styles.title}>{item.name}</ThemedText>
+        <ThemedText style={styles.friendsCount}>
+          {item.friends.length} friends
+        </ThemedText>
       </LinearGradientBox>
     </TouchableOpacity>
   );

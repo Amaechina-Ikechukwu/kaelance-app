@@ -55,6 +55,28 @@ enum CircleType {}
 
 enum Status {}
 // Add appropriate enum values
+export interface CommitmentHistory {
+  transactionId: string;
+  percentage: number;
+  dateTime: string;
+}
+
+export interface Activity {
+  activityId: string;
+  date: string;
+  bankId: string;
+  activityType: number;
+  dateTime: string;
+}
+
+export interface CircleActivity {
+  id: number;
+  circleId: string;
+  commitmentHistory: CommitmentHistory;
+  activity: Activity;
+  withdrawalApprovalPercentage: number;
+  withdrawalAction: any;
+}
 
 export interface Circle {
   circleId: string;
@@ -69,6 +91,8 @@ export interface Circle {
   transactionHistory: Transactions[];
   circleType: CircleType;
   status: Status;
+  targetAmount: number;
+  totalCommittment: number;
 }
 
 type CircleArray = Circle[];

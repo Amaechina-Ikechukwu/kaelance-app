@@ -30,7 +30,7 @@ export const BottomSheetProvider: React.FC<BottomSheetProviderProps> = ({
   children,
 }) => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const snapPoints = useMemo(() => ["25%", "50%", "90%"], []);
+  const snapPoints = useMemo(() => ["25%", "50%", "95%"], []);
   const [content, setContent] = useState<ReactNode>(null);
 
   const openBottomSheet = (component: ReactNode) => {
@@ -54,7 +54,7 @@ export const BottomSheetProvider: React.FC<BottomSheetProviderProps> = ({
         {children}
         <BottomSheetModal
           ref={bottomSheetModalRef}
-          index={0}
+          index={2}
           snapPoints={snapPoints}
         >
           <View style={styles.contentContainer}>{content}</View>
