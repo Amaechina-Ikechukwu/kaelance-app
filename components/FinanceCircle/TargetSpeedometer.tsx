@@ -1,38 +1,65 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet, useColorScheme } from "react-native";
+import Svg, { Path, Defs, LinearGradient, Stop } from "react-native-svg";
+import { blue, Colors, pink } from "@/constants/Colors";
+import { ThemedText } from "../ThemedText";
+import { width } from "@/constants/StatusBarHeight";
 
-const TargetSpeedometer = () => {
-  const [speed, setSpeed] = useState(0);
+interface TargetSpeedometerProps {
+  targetValue: number;
+  currentValue: number;
+}
+
+const TargetSpeedometer: React.FC<TargetSpeedometerProps> = ({
+  targetValue,
+  currentValue,
+}) => {
+  const [progress, setProgress] = useState(0);
+  const theme = useColorScheme() ?? "light";
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setSpeed(Math.floor(Math.random() * 120)); // Simulate changing speed
-    }, 1000);
+    setProgress((currentValue / targetValue) * 100);
+  }, [currentValue, targetValue]);
 
-    return () => clearInterval(interval);
-  }, []);
+  const radius = 160;
+  const strokeWidth = 20;
+  const circumference = Math.PI * radius;
+  const arcLength = (progress / 100) * circumference;
 
   return (
     <View style={styles.container}>
-      <View style={styles.speedometer}>
-        {/* Outer circle */}
-        <View style={styles.outerCircle} />
+      <View style={{ minHeight: 220 }}>
+        <Svg height="180" width="320" viewBox="0 0 320 180">
+          <Defs>
+            <LinearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <Stop offset="0%" stopColor={pink} stopOpacity="1" />
+              <Stop offset="100%" stopColor={blue} stopOpacity="1" />
+            </LinearGradient>
+          </Defs>
 
-        {/* Inner circle */}
-        <View style={styles.innerCircle} />
-
-        {/* Speed text */}
-        <Text style={styles.speedText}>{speed} km/h</Text>
-
-        {/* Colored arc */}
-        <View style={styles.arcContainer}>
-          <View
-            style={[
-              styles.arc,
-              { transform: [{ rotate: `-${speed * 1.5}deg` }] },
-            ]}
+          {/* Background semi-circle */}
+          <Path
+            d={`M 20,160 A ${radius},${radius} 0 0 1 300,160`}
+            stroke={Colors[theme].hueTint}
+            strokeWidth={strokeWidth}
+            fill="none"
           />
-        </View>
+
+          {/* Progress Arc */}
+          <Path
+            d={`M 20,160 A ${radius},${radius} 0 0 1 300,160`}
+            stroke="url(#grad)"
+            strokeWidth={strokeWidth}
+            strokeDasharray={`${arcLength},${circumference}`}
+            fill="none"
+          />
+        </Svg>
+      </View>
+
+      <View style={styles.textContainer}>
+        <ThemedText style={{ fontSize: 36 }} type="subtitle">
+          {progress.toFixed(2)}%
+        </ThemedText>
       </View>
     </View>
   );
@@ -40,62 +67,16 @@ const TargetSpeedometer = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    height: 80,
+    margin: 20,
+    width: width * 0.9,
   },
-  speedometer: {
-    width: 200,
-    height: 100,
+  textContainer: {
+    position: "absolute",
+    top: "60%",
     alignItems: "center",
-    justifyContent: "center",
-    position: "relative",
-    overflow: "hidden", // Clip the colored arc within the speedometer
-  },
-  outerCircle: {
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    borderWidth: 2,
-    borderColor: "gray",
-    position: "absolute",
-    top: -50, // Adjust position to center vertically
-    left: 0,
-  },
-  innerCircle: {
-    width: 180,
-    height: 180,
-    borderRadius: 90,
-    borderWidth: 1,
-    borderColor: "gray",
-    backgroundColor: "white",
-    position: "absolute",
-    top: -30, // Adjust position to center vertically
-    left: 10,
-  },
-  speedText: {
-    position: "absolute",
-    fontSize: 24,
-    fontWeight: "bold",
-    top: 45, // Adjust position to center vertically
-  },
-  arcContainer: {
-    width: 200,
-    height: 100,
-    overflow: "hidden", // Clip the colored arc within this container
-    position: "absolute",
-    top: 0,
-    left: 0,
-  },
-  arc: {
-    width: 200,
-    height: 200,
-    borderTopLeftRadius: 100,
-    borderTopRightRadius: 100,
-    backgroundColor: "red",
-    position: "absolute",
-    bottom: 0,
-    left: 0,
   },
 });
 

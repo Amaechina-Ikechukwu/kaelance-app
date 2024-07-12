@@ -14,6 +14,7 @@ import { InAppNotificationProvider } from "@/hooks/InAppNotificationProvider";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AuthProvider } from "@/hooks/AuthContextProvider";
 import { BottomSheetProvider } from "@/hooks/BottomSheetProvider";
+import { PushTokenProvider } from "@/hooks/PushTokenContext";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -40,20 +41,28 @@ export default function RootLayout() {
         <InAppNotificationProvider>
           <AuthProvider>
             <BottomSheetProvider>
-              <Stack>
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="auth" options={{ headerShown: false }} />
-                <Stack.Screen name="circle" options={{ headerShown: false }} />
-                <Stack.Screen
-                  name="transactions"
-                  options={{
-                    headerShown: true,
-                    headerTitle: "Top-Up With Flutterwave",
-                    headerShadowVisible: false,
-                  }}
-                />
-                <Stack.Screen name="+not-found" />
-              </Stack>
+              <PushTokenProvider>
+                <Stack>
+                  <Stack.Screen
+                    name="(tabs)"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen name="auth" options={{ headerShown: false }} />
+                  <Stack.Screen
+                    name="circle"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="transactions"
+                    options={{
+                      headerShown: true,
+                      headerTitle: "Top-Up With Flutterwave",
+                      headerShadowVisible: false,
+                    }}
+                  />
+                  <Stack.Screen name="+not-found" />
+                </Stack>
+              </PushTokenProvider>
             </BottomSheetProvider>
           </AuthProvider>
         </InAppNotificationProvider>

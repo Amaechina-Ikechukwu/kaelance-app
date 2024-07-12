@@ -1,5 +1,5 @@
-import { View, Text, ScrollView, StyleSheet } from "react-native";
-import React, { useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { View, Text, ScrollView, StyleSheet, Animated } from "react-native";
 import { Stack, useLocalSearchParams } from "expo-router";
 import kaeStore from "@/hooks/kaestore";
 import { useShallow } from "zustand/react/shallow";
@@ -31,19 +31,31 @@ export default function FinanceCircle() {
       state.circleActivity,
     ])
   );
+
+  const fadeInAnim = useRef(new Animated.Value(0)).current;
+
   const getCircleDetails = async () => {
     const financeCircle = await GetFinanceCircle(`${circleid}`, userToken);
     const circleActivity = await GetCircleActivity(`${circleid}`, userToken);
 
     setCircle(financeCircle);
     setCircleActivity(circleActivity);
+
+    // Trigger fade-in animation
+    Animated.timing(fadeInAnim, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
   };
+
   useEffect(() => {
     if (userToken) {
       getCircleDetails();
     }
   }, [userToken]);
-  if (circle == null) {
+
+  if (circle == null || circleid !== circle.circleId) {
     return (
       <>
         <Stack.Screen
@@ -55,6 +67,7 @@ export default function FinanceCircle() {
       </>
     );
   }
+
   const {
     circleId,
     circleType,
@@ -71,13 +84,14 @@ export default function FinanceCircle() {
     withdrawalChargePercentage,
     withdrawalLimitPercentage,
   } = circle;
+
   const amountCommited = Math.round(targetAmount * (totalCommittment / 100));
-  useEffect(() => {}, []);
+
   return (
-    <ThemedView style={{ marginTop: statusBarHeight + 50, flex: 1 }}>
+    <Animated.View style={[styles.container, { opacity: fadeInAnim }]}>
       <Stack.Screen
         options={{
-          title: name || "Finance Circle loading",
+          title: " " || "Finance Circle loading",
           headerBlurEffect: "regular",
           headerTransparent: true,
           headerLargeTitle: true,
@@ -87,21 +101,19 @@ export default function FinanceCircle() {
         contentInsetAdjustmentBehavior="automatic"
         contentContainerStyle={{ gap: 18, alignItems: "center" }}
       >
-        <CallingCard
-          text={formatMoney(targetAmount)}
-          position={0.5}
-          propwidth={0.9}
-        />
-
-        <TargetSpeedometer
-        // currentAmount={amountCommited}
-        // targetAmount={targetAmount}
-        />
+        <CallingCard text={name} position={0.5} propwidth={0.9} />
+        {targetAmount && (
+          <TargetSpeedometer
+            currentValue={amountCommited}
+            targetValue={targetAmount}
+          />
+        )}
+        <ThemedText type={"title"}>{formatMoney(targetAmount)}</ThemedText>
         <PillChildrenContainer style={[styles.pillContainer]}>
           <ThemedView style={[styles.pillCard]}>
             <ThemedText>
-              Total Percentage commited:
-              <ThemedText>{totalCommittment}</ThemedText>
+              Total Percentage committed:{" "}
+              <ThemedText>{totalCommittment}%</ThemedText>
             </ThemedText>
             <ThemedText type="subtitle">
               {formatMoney(amountCommited)}
@@ -110,8 +122,8 @@ export default function FinanceCircle() {
           </ThemedView>
           <ThemedView style={[styles.pillCard]}>
             <ThemedText>
-              Total Percentage remaining:
-              <ThemedText>{100 - totalCommittment}</ThemedText>
+              Total Percentage remaining:{" "}
+              <ThemedText>{100 - totalCommittment}%</ThemedText>
             </ThemedText>
             <ThemedText type="subtitle">
               {formatMoney(targetAmount - amountCommited)}
@@ -127,11 +139,16 @@ export default function FinanceCircle() {
           />
         </ThemedView>
       </ScrollView>
-    </ThemedView>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    marginTop: statusBarHeight + 50,
+    flex: 1,
+    opacity: 0, // Initial opacity set to 0 for fade-in effect
+  },
   pillContainer: {
     width: width * 0.9,
     flexDirection: "row",

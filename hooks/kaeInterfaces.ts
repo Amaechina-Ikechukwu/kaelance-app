@@ -42,7 +42,7 @@ export interface AccountDetails {
 }
 export interface BalanceDetails {
   id: number;
-  bankAccountDetails: null | any; // Type of bankAccountDetails is not defined, so using any
+  bankAccountDetails: AccountDetails; // Type of bankAccountDetails is not defined, so using any
   currentBalance: number;
   currency: string;
   currencySymbol: string;

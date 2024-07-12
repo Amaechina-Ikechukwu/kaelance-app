@@ -28,7 +28,7 @@ const Loading = ({
   useEffect(() => {
     const loadingTimeout = setTimeout(() => {
       setLoading(false);
-    }, 7000);
+    }, 12000);
 
     Animated.loop(
       Animated.sequence([

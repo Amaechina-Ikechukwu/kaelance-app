@@ -243,7 +243,11 @@ export default function CircleCreation() {
           <ThemedText>
             Current Balance:{" "}
             <ThemedText type="subtitle">
-              {formatMoney(balanceDetails?.currentBalance)}
+              {formatMoney(
+                balanceDetails.currentBalance -
+                  (balanceDetails.totalCommittment / 100) *
+                    balanceDetails?.currentBalance
+              )}
             </ThemedText>
           </ThemedText>
           {personalCommittmentPercentage > 0 && (

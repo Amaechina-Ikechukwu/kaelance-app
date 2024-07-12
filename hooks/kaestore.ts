@@ -37,6 +37,7 @@ type State = {
   setClearAllFriendsToAdd: () => void;
   setCircle: (value: any) => void;
   setCircleActivity: (value: any) => void;
+  setRemoveFromFriendToAdd: (value: any) => void;
 };
 
 const kaeStore = create<State>((set) => ({
@@ -62,6 +63,16 @@ const kaeStore = create<State>((set) => ({
   setClearAllFriendsToAdd: () => set({ financeCircle: [] }),
   setCircle: (value) => set({ circle: value }),
   setCircleActivity: (value) => set({ circleActivity: value }),
+  setRemoveFromFriendToAdd: (value) =>
+    set((state) => {
+      const newList = state.friendsToAdd.filter(
+        (f: AccountDetails) =>
+          f.kallumUser.userName !== value.kallumUser.userName
+      );
+      return {
+        friendsToAdd: newList,
+      };
+    }),
   setFriendsToAdd: (friend) =>
     set((state) => {
       const friendExists = state.friendsToAdd.some(

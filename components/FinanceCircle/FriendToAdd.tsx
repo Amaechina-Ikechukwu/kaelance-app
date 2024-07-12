@@ -23,20 +23,22 @@ import { blue, Colors, pink } from "@/constants/Colors";
 import { height, width } from "@/constants/StatusBarHeight";
 import { useNotification } from "@/hooks/InAppNotificationProvider";
 import { BankGet } from "@/apis/Bank/BankGet";
-
+import { FontAwesome6 } from "@expo/vector-icons";
 const EmptyList = () => {
   return <ThemedView>Search friend to add</ThemedView>;
 };
 export default function FriendToAdd() {
   const { userToken } = useAuth();
   const theme = useColorScheme() ?? "light";
-  const [friendsToAdd, setFriendsToAdd, accountDetails] = kaeStore(
-    useShallow((state) => [
-      state.friendsToAdd,
-      state.setFriendsToAdd,
-      state.accountDetails,
-    ])
-  );
+  const [friendsToAdd, setFriendsToAdd, accountDetails, removeFriend] =
+    kaeStore(
+      useShallow((state) => [
+        state.friendsToAdd,
+        state.setFriendsToAdd,
+        state.accountDetails,
+        state.setRemoveFromFriendToAdd,
+      ])
+    );
   const { showNotification } = useNotification();
   const [searchResult, setSearchResult] = useState([]);
   const [loading, isLoading] = useState(false);
@@ -72,7 +74,16 @@ export default function FriendToAdd() {
   useEffect(() => {}, [FriendToAdd]);
   const renderItem = ({ item }: { item: AccountDetails }) => {
     return (
-      <View>
+      <View style={{ minWidth: 55 }}>
+        <View style={{ position: "absolute", zIndex: 2, right: 0, top: 0 }}>
+          <TouchableOpacity onPress={() => removeFriend(item)}>
+            <FontAwesome6
+              name="circle-minus"
+              size={24}
+              color={Colors.light.text}
+            />
+          </TouchableOpacity>
+        </View>
         <Avatar name={item.kallumUser.userName} />
       </View>
     );

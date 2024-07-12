@@ -1,4 +1,10 @@
-import { View, Text, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  useColorScheme,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
 import { ThemedView } from "../ThemedView";
 import Avatar from "@/constants/Avatar";
@@ -6,9 +12,10 @@ import { AccountDetails, KallumUser } from "@/hooks/kaeInterfaces";
 import { ThemedText } from "../ThemedText";
 import { width } from "@/constants/StatusBarHeight";
 import PillChildrenContainer from "@/constants/PillChilderenContainer";
-import { Colors } from "@/constants/Colors";
-
+import { blue, Colors, pink } from "@/constants/Colors";
+import { AntDesign } from "@expo/vector-icons";
 export default function CircleMembers({ friends }: { friends: KallumUser[] }) {
+  const theme = useColorScheme() ?? "light";
   const renderItem = ({ item }: { item: KallumUser }) => {
     return (
       <View style={{ alignItems: "center" }}>
@@ -27,7 +34,19 @@ export default function CircleMembers({ friends }: { friends: KallumUser[] }) {
   };
   return (
     <PillChildrenContainer style={{ height: 120 }}>
-      <ThemedText type="defaultSemiBold">Members</ThemedText>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <ThemedText type="defaultSemiBold">Members</ThemedText>
+        <TouchableOpacity>
+          <AntDesign name="right" size={18} color={pink} />
+        </TouchableOpacity>
+      </View>
+
       <FlatList
         horizontal={true}
         data={friends}

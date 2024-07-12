@@ -59,7 +59,7 @@ export default function FinanceCircle() {
   const renderItem = ({ item }: { item: Circle }) => {
     return (
       <TouchableOpacity
-        onPress={() => router.push(`circle/${item.circleId}`)}
+        onPress={() => router.push(`circle/${item.circleId}/`)}
         style={[styles.circleContainer]}
       >
         <Avatar name={item.name} />
