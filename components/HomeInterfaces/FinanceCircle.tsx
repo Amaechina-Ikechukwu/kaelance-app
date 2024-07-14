@@ -55,7 +55,7 @@ export default function FinanceCircle() {
   const [financeCircle] = kaeStore(
     useShallow((state) => [state.financeCircle])
   );
-  const limitedData = financeCircle.slice(0, 3);
+  const limitedData = financeCircle && financeCircle.slice(0, 3);
   const renderItem = ({ item }: { item: Circle }) => {
     return (
       <TouchableOpacity

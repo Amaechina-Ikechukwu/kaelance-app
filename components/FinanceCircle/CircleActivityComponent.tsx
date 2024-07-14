@@ -93,7 +93,7 @@ export default function CircleActivityComponent({
 
           flexDirection: "column",
         }}
-        ListEmptyComponent={<Loading />}
+        ListEmptyComponent={<Loading componentName="Circle Activity" />}
       />
     </PillChildrenContainer>
   );

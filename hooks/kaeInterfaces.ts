@@ -1,6 +1,7 @@
 export interface KallumUser {
   userName: string;
   email: string;
+  userId: string;
 }
 
 interface Sender {
@@ -38,6 +39,7 @@ export interface AccountDetails {
   kallumUser: {
     userName: string;
     email: string;
+    userId: string;
   };
 }
 export interface BalanceDetails {
@@ -94,5 +96,12 @@ export interface Circle {
   targetAmount: number;
   totalCommittment: number;
 }
-
+export interface Notifications {
+  title: string;
+  dateTime: string; // ISO 8601 date-time string
+  bankId: string | null; // Can be null
+  seenNotification: boolean;
+  type: string;
+  typeId: string;
+}
 type CircleArray = Circle[];

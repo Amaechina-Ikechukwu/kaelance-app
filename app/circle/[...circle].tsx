@@ -131,7 +131,7 @@ export default function FinanceCircle() {
             <ThemedText>Remaining: </ThemedText>
           </ThemedView>
         </PillChildrenContainer>
-        <CircleMembers friends={friends} />
+        <CircleMembers friends={friends} circleId={circleId} />
         <ThemedView>
           <CircleActivityComponent
             circleActivity={circleActivity}

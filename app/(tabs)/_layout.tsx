@@ -2,7 +2,7 @@ import { Tabs, router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import * as SecureStore from "expo-secure-store";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import { Colors } from "@/constants/Colors";
+import { Colors, error, pink } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import Loading from "@/constants/Loading";
 import { useAuth } from "@/hooks/AuthContextProvider";
@@ -15,18 +15,26 @@ import kaeStore from "@/hooks/kaestore";
 import { useShallow } from "zustand/react/shallow";
 import { GetFinanceCircle } from "@/apis/FinanceCircle/GetFinacleCircle";
 import { useNotification } from "@/hooks/InAppNotificationProvider";
+import { GetNotifications } from "@/apis/GeneralNotifications/GetNotifications";
 const CustomHeader = () => {
   const { openBottomSheet } = useBottomSheet();
   const theme = useColorScheme() ?? "light";
-  const [setFinanceCircle] = kaeStore(
-    useShallow((state) => [state.setFinanceCircle])
-  );
+  const [setFinanceCircle, generalNotification, setGeneralNotifications] =
+    kaeStore(
+      useShallow((state) => [
+        state.setFinanceCircle,
+        state.generalNotification,
+        state.setGeneralNotifications,
+      ])
+    );
   const { showNotification } = useNotification();
   const { userToken } = useAuth();
   const getFinacleCircles = async () => {
     showNotification("Getting your Circles", "loading");
     const financeCircle = await GetFinanceCircle("", userToken);
+    const notifications = await GetNotifications("", userToken);
 
+    setGeneralNotifications(notifications);
     setFinanceCircle(financeCircle);
     showNotification("Successful", "success");
   };
@@ -59,6 +67,20 @@ const CustomHeader = () => {
 
 export default function TabLayout() {
   const [loading, setIsLoading] = useState(false);
+  const [generalNotification, setGeneralNotifications] = kaeStore(
+    useShallow((state) => [
+      state.generalNotification,
+      state.setGeneralNotifications,
+    ])
+  );
+  const [notificationsCount, setNotificationsCount] = useState(0);
+  const { showNotification } = useNotification();
+  const { userToken } = useAuth();
+  const getFinacleCircles = async () => {
+    const notifications = await GetNotifications("", userToken);
+
+    setGeneralNotifications(notifications);
+  };
   // const { signOut } = useAuth();
   const getIfUserIsNew = async () => {
     const token = await SecureStore.getItemAsync("newUser");
@@ -71,7 +93,19 @@ export default function TabLayout() {
   useEffect(() => {
     // signOut();
     getIfUserIsNew();
+    getFinacleCircles();
   }, []);
+  useEffect(() => {
+    if (generalNotification) {
+      let unseenCount = 0;
+      for (const notification of generalNotification) {
+        if (notification.seenNotification === false) {
+          unseenCount++;
+        }
+      }
+      setNotificationsCount(unseenCount);
+    }
+  }, [generalNotification]);
   if (!loading) {
     return <Loading componentName="Home" />;
   }
@@ -101,6 +135,20 @@ export default function TabLayout() {
           ),
           headerRight: () => <CustomHeader />,
           headerRightContainerStyle: { marginRight: 20 },
+        }}
+      />
+      <Tabs.Screen
+        name="generalnotifications"
+        options={{
+          title: "Notifications",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={
+                notificationsCount > 0 ? "bell-badge-outline" : "bell-outline"
+              }
+              color={notificationsCount > 0 ? pink : color}
+            />
+          ),
         }}
       />
     </Tabs>

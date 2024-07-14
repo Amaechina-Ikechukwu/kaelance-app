@@ -14,7 +14,14 @@ import { width } from "@/constants/StatusBarHeight";
 import PillChildrenContainer from "@/constants/PillChilderenContainer";
 import { blue, Colors, pink } from "@/constants/Colors";
 import { AntDesign } from "@expo/vector-icons";
-export default function CircleMembers({ friends }: { friends: KallumUser[] }) {
+import { router } from "expo-router";
+export default function CircleMembers({
+  friends,
+  circleId,
+}: {
+  friends: KallumUser[];
+  circleId: string;
+}) {
   const theme = useColorScheme() ?? "light";
   const renderItem = ({ item }: { item: KallumUser }) => {
     return (
@@ -42,7 +49,9 @@ export default function CircleMembers({ friends }: { friends: KallumUser[] }) {
         }}
       >
         <ThemedText type="defaultSemiBold">Members</ThemedText>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => router.push({ pathname: `circle/members` })}
+        >
           <AntDesign name="right" size={18} color={pink} />
         </TouchableOpacity>
       </View>

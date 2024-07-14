@@ -19,6 +19,7 @@ import { BankGet } from "@/apis/Bank/BankGet";
 import { useAuth } from "@/hooks/AuthContextProvider";
 import { router } from "expo-router";
 import AnimatedLinearGradient from "@/constants/AnimatedLinearGradient";
+import { GetNotifications } from "@/apis/GeneralNotifications/GetNotifications";
 
 interface PaymentProps {
   publicKey: string; // Your Flutterwave merchant public key
@@ -38,14 +39,18 @@ const Payment: React.FC<PaymentProps> = ({
   onRedirect,
 }) => {
   const { userToken } = useAuth();
-  const [setBalanceDetails] = kaeStore(
-    useShallow((state) => [state.setBalanceDetails])
+  const [setBalanceDetails, setGeneralNotifications] = kaeStore(
+    useShallow((state) => [
+      state.setBalanceDetails,
+      state.setGeneralNotifications,
+    ])
   );
   const getBankDetails = async () => {
     // const result = await BankGet("accountdetails", userToken);
     const balance = await BankGet("balance", userToken);
-
+    const notification = await GetNotifications("", userToken);
     setBalanceDetails(balance);
+    setGeneralNotifications(notification);
   };
   const [input, setInput] = useState("1000");
   const { showNotification } = useNotification();

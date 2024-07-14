@@ -4,6 +4,7 @@ import {
   BalanceDetails,
   Circle,
   CircleActivity,
+  Notifications,
   Transactions,
 } from "./kaeInterfaces";
 
@@ -22,6 +23,7 @@ type State = {
   friendsToAdd: any | null;
   circle: Circle | null;
   circleActivity: CircleActivity[] | null;
+  generalNotification: Notifications[];
   setKaeLockStatus: (
     value: { securePin: string; transactionPin: string } | null
   ) => void;
@@ -38,6 +40,7 @@ type State = {
   setCircle: (value: any) => void;
   setCircleActivity: (value: any) => void;
   setRemoveFromFriendToAdd: (value: any) => void;
+  setGeneralNotifications: (value: any) => void;
 };
 
 const kaeStore = create<State>((set) => ({
@@ -52,6 +55,8 @@ const kaeStore = create<State>((set) => ({
   friendsToAdd: [],
   circle: null,
   circleActivity: [],
+  generalNotification: [],
+
   setActionStatus: (status) => set({ actionStatus: status }),
   setIsSecured: (value) => set({ isSecured: value }),
   setKaeLockStatus: (value) => set({ kaeLockStatus: value }),
@@ -63,6 +68,7 @@ const kaeStore = create<State>((set) => ({
   setClearAllFriendsToAdd: () => set({ financeCircle: [] }),
   setCircle: (value) => set({ circle: value }),
   setCircleActivity: (value) => set({ circleActivity: value }),
+  setGeneralNotifications: (value) => set({ generalNotification: value }),
   setRemoveFromFriendToAdd: (value) =>
     set((state) => {
       const newList = state.friendsToAdd.filter(

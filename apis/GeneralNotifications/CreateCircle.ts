@@ -9,7 +9,7 @@ export const CreateCircle = async (
   token?: string | undefined | null
 ) => {
   try {
-    const response = await fetch(`${BASE_URL}/api/circle/${endpoint}`, {
+    const response = await fetch(`${BASE_URL}/api/financecircle/${endpoint}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json-patch+json",

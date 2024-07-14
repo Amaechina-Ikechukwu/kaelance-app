@@ -1,0 +1,27 @@
+// Define the base URL for your API
+const BASE_URL = process.env.EXPO_PUBLIC_API_URL; // Replace with your API URL
+
+// Define the function to send a POST request with a bearer token using fetch
+export const GetNotifications = async (
+  endpoint: string,
+  token: string | null | undefined
+) => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/notifications/${endpoint}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        // Add any other headers if needed
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    return await response.json();
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};

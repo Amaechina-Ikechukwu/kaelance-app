@@ -20,6 +20,7 @@ import BankDetails from "@/components/HomeInterfaces/BankDetailsInfo";
 import { statusBarHeight } from "@/constants/StatusBarHeight";
 import FinanceCircle from "@/components/HomeInterfaces/FinanceCircle";
 import { GetFinanceCircle } from "@/apis/FinanceCircle/GetFinacleCircle";
+import TransactionsNotifications from "@/components/HomeInterfaces/TransactionsNotifications";
 
 export default function HomeScreen() {
   const [isLoading, setIsLoading] = useState(false);
@@ -60,6 +61,7 @@ export default function HomeScreen() {
     >
       <BankDetails />
       <FinanceCircle />
+      <TransactionsNotifications />
     </ThemedView>
   );
 }

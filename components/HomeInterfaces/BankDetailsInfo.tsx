@@ -106,7 +106,7 @@ export default function BankDetails() {
           </View>
 
           <PillContainer
-            text={`${balanceDetails?.totalCommittment} committemnt to your circles in total`}
+            text={`${balanceDetails?.totalCommittment}% of funds committemnt to your circles in total`}
           />
           <TouchableOpacity
             style={{
